@@ -1,34 +1,3 @@
-{
-	"tasks": [
-		{
-		"task":"A",
-		"employees": [
-			{"name": "Alex", "score": "3.4", "slack_id": "exampleid"},
-			{"name": "Amy", "score": "9.1", "slack_id": "exampleid1"},
-			{"name": "Ariana", "score": "2.8", "slack_id": "exampleid2"}
-		],
-		"e_hours":"25",
-		"due_date":"01/01/2022"
-		}
-		{
-		"task":"B",
-		"employees": [
-			{"name": "Victor", "score": "3.0", "slack_id": "exampleid"},
-			{"name": "Violet", "score": "10.0", "slack_id": "exampleid1"},
-			{"name": "Vincent", "score": "6.3", "slack_id": "exampleid2"}
-		],
-		"e_hours":"40",
-		"due_date":"01/07/2021"
-		}
-		{
-		"task":"C",
-		"employees": [
-			{"name": "Michael", "score": "4.4", "slack_id": "exampleid"},
-			{"name": "Max", "score": "1.1", "slack_id": "exampleid1"},
-			{"name": "Mary", "score": "8.5", "slack_id": "exampleid2"}
-		],
-		"e_hours":"8",
-		"due_date":"02/01/2021"
-		}
-	]	
-}
+{ "task": "A", "employees": [{"name": "Alex", "score": 3.4, "slack_id": "exampleid"}, {"name": "Amy", "score": 9.1, "slack_id": "exampleid1"}, {"name": "Ariana", "score": 2.8, "slack_id": "exampleid2"}], "e_hours": 25.0, "due_date": "01/01/2022" }
+{ "task": "B", "employees": [{"name": "Victor", "score": 3.0, "slack_id": "exampleid3"}, {"name": "Violet", "score": 10.0, "slack_id": "exampleid4"}, {"name": "Vincent", "score": 6.3, "slack_id": "exampleid5"}], "e_hours": 40.0, "due_date": "01/07/2021" }
+{ "task": "C", "employees": [{"name": "Michael", "score": 4.4, "slack_id": "exampleid6"}, {"name": "Max", "score": 1.1, "slack_id": "exampleid7"}, {"name": "Mary", "score": 8.5, "slack_id": "exampleid8"}], "e_hours" : 8.0, "due_date" : "02/01/2021" }
