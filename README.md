@@ -2,9 +2,9 @@
 
 Connecting the bot to slack:
 
-Mac:
+# Mac:
 
-In the terminal
+In the terminal...
 
 install slack api using "pip install slackclient"
 
@@ -14,9 +14,9 @@ Switch into this envirnment using "conda activate ProjectManagerBot"
 
 create an environment variable using "export BOT_USER_TOKEN=xoxb-1694276255058-1700483023108-Ofi2ohBrjuk3Y97Viu2Y8lz4"
 
-WINDOWS:
+# WINDOWS:
 
-In the command prompt
+In the command prompt...
 
 install slack using "pip install slackclient"
 
