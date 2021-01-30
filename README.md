@@ -12,7 +12,7 @@ Create a virtual environment in your command line. "conda create --name ProjectM
 
 Switch into this envirnment using "conda activate ProjectManagerBot"
 
-create an environment variable using "export BOT_USER_TOKEN=xoxb-1694276255058-1700483023108-Ofi2ohBrjuk3Y97Viu2Y8lz4"
+create an environment variable using "export BOT_USER_TOKEN=xoxb-1694276255058-1700483023108-8f0iFG4qoJD9Dvoy7uQgFJCS"
 
 # WINDOWS:
 
@@ -24,5 +24,5 @@ Create a virtual environment in your command line. "conda create --name ProjectM
 
 Switch into this envirnment using "conda activate ProjectManagerBot"
 
-create an environment variable using "set BOT_USER_TOKEN=xoxb-1694276255058-1700483023108-Ofi2ohBrjuk3Y97Viu2Y8lz4"
+create an environment variable using "set BOT_USER_TOKEN=xoxb-1694276255058-1700483023108-8f0iFG4qoJD9Dvoy7uQgFJCS"
 
