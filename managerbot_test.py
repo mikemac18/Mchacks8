@@ -1,6 +1,7 @@
 from slack import WebClient
 from managerbot import ManagerBot
 import os
+import xlrd
 
 # Create a slack client
 slack_web_client = WebClient(token=os.environ.get("BOT_USER_TOKEN"))
