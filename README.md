@@ -12,7 +12,9 @@ Create a virtual environment in your command line. "conda create --name ProjectM
 
 Switch into this envirnment using "conda activate ProjectManagerBot"
 
-create an environment variable using "export BOT_USER_TOKEN=xoxb-1694276255058-1700483023108-tO2uTVKHzSmL7eecrlUGZhnL"
+Goto https://api.slack.com/apps > your apps (top right) > ProjectManagerBot > Under settings goto install app > copy the "Bot User OAuth Token"
+
+create an environment variable using "export BOT_USER_TOKEN='bot oauth token from above website' "
 
 # WINDOWS:
 
@@ -24,5 +26,7 @@ Create a virtual environment in your command line. "conda create --name ProjectM
 
 Switch into this envirnment using "conda activate ProjectManagerBot"
 
-create an environment variable using "set BOT_USER_TOKEN=xoxb-1694276255058-1700483023108-yo4sCZODdidRwMMZVQqLW9dp"
+Goto https://api.slack.com/apps > your apps (top right) > ProjectManagerBot > Under settings goto install app > copy the "Bot User OAuth Token"
+
+create an environment variable using "set BOT_USER_TOKEN='bot oauth token from above website' "
 
