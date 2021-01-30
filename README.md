@@ -6,7 +6,7 @@ Connecting the bot to slack:
 
 In the terminal...
 
-install slack api using "pip install slackclient"
+install slack api using "pip install slackclient slackeventsapi Flask"
 
 Create a virtual environment in your command line. "conda create --name ProjectManagerBot python=3.8.5"
 
@@ -18,7 +18,7 @@ create an environment variable using "export BOT_USER_TOKEN=xoxb-1694276255058-1
 
 In the command prompt...
 
-install slack using "pip install slackclient"
+install slack using "pip install slackclient slackeventsapi Flask"
 
 Create a virtual environment in your command line. "conda create --name ProjectManagerBot python=3.8.5"
 
