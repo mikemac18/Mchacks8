@@ -2,15 +2,15 @@
 import random
 
 # Create the CoinBot Class
-class CoinBot:
+class ManagerBot:
 
     # Create a constant that contains the default text for the message
-    COIN_BLOCK = {
+    ADD_ME = {
         "type": "section",
         "text": {
             "type": "mrkdwn",
             "text": (
-                "Sure! Flipping a coin....\n\n"
+                "Sure! Let me add that real quick....\n\n"
             ),
         },
     }
@@ -22,12 +22,8 @@ class CoinBot:
 
     # Generate a random number to simulate flipping a coin. Then return the
     # crafted slack payload with the coin flip message.
-    def _flip_coin(self):
-        rand_int =  random.randint(0,1)
-        if rand_int == 0:
-            results = "Heads"
-        else:
-            results = "Tails"
+    def _add_nums(self):
+        results = "1 + 1 = 2"
 
         text = f"The result is {results}"
 
@@ -38,7 +34,7 @@ class CoinBot:
         return {
             "channel": self.channel,
             "blocks": [
-                self.COIN_BLOCK,
-                *self._flip_coin(),
+                self.ADD_ME,
+                *self._add_nums(),
             ],
         }
