@@ -36,6 +36,11 @@ slack_events_adapter = SlackEventAdapter(
     SLACK_SIGNING_SECRET, "/slack/events", app
 )  
 
+def get_user_permission(message):
+    userid = message["user"]
+    userdata=slack_client.users_info(user = userid)
+    permissioncheck = userdata["user"]["is_owner"]
+    return permissioncheck
 
 @slack_events_adapter.on("app_mention")
 def handle_message(event_data):
@@ -45,11 +50,13 @@ def handle_message(event_data):
         if message.get("subtype") is None:
             command = message.get("text")
             channel_id = message["channel"]
+            userIsOwner = get_user_permission(message)
             if any(item in command.lower() for item in greetings):
-                message = (
-                    "Hello <@%s>! :tada:"
-                    % message["user"]  # noqa
-                )
+                if (userIsOwner == True):
+                    message = (
+                    "Hello <@%s>! You DO have permission. :tada:"
+                        % message["user"]  # noqa
+                    )
                 slack_client.chat_postMessage(channel=channel_id, text=message)
     thread = Thread(target=send_reply, kwargs={"value": event_data})
     thread.start()
