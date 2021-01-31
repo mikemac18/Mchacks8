@@ -28,6 +28,16 @@ db = client.test
 collection = db['tasklist']
 dataList = collection.find()
 x = []
+assigned = []
+
+for item in dataList:
+    assigned = ""
+    for employee in item["employees"]:
+        assigned = assigned + str(employee["name"]) + ", "
+    #print("Task: " + item["task"] + " Employees: " + assigned + " Due Date: " + str(item["due_date"]))
+    assigned = assigned[:-2]
+    x.append("Task: " + item["task"] + "\n" + " Employees: " + assigned + "\n" + " Due Date: " + str(item["due_date"]) + "\n")
+
 for item in dataList:
     #print("Task: " + item["task"] + " Employees: " + str(item["employees"]) + " Due Date: " + str(item["due_date"]))
 
