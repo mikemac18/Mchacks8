@@ -1,9 +1,64 @@
+
 import pymongo
 
 client = pymongo.MongoClient("mongodb+srv://amv:mchacks8@cluster0.jweue.mongodb.net/test?retryWrites=true&w=majority")
 db = client.Employee_Data
 collection = db['task_info']
 dataList = collection.find()
+
+def getEmployeesByProject(project):
+    employees = ""
+    for item in dataList:
+        if (item["Project"].lower() in project.lower()):
+            employees = employees + item["Name"] + ", "
+    employees = employees[:-2]
+    return employees
+
+def getStatusReport(name):
+    report = "No report available"
+    for item in dataList:
+        if (item["Name"].lower() in name.lower()):
+            report = "" + item["Status"]
+    return report
+
+def getAllTasks(name):
+    tasklist = ""
+    for item in dataList:
+        if (item["Name"].lower() in name.lower()):
+            for task in item["Tasks"]:
+                tasklist = tasklist + task + ", "
+            tasklist = tasklist[:-2]
+    return tasklist
+
+def getCompletedTasks(name):
+    completed = ""
+    for item in dataList:
+        if (item["Name"].lower() in name.lower()):
+            for complete in item["Completed_Tasks"]:
+                completed = completed + complete + ", "
+            completed = completed[:-2]
+    return completed
+
+def getStatusReport(name):
+    report = "No report available"
+    for item in datalist:
+        if (item["Name"].lower() in name.lower()):
+            report = "" + item["Status"]
+    return report
+
+def getEmployeeList():
+    names = []
+    for item in dataList:
+        names.append(item["Name"])
+    return names
+
+def getEmployeeProject(name):
+    project = "No project assigned"
+    name = name.lower()
+    for item in dataList:
+        if (item["Name"].lower() in name.lower()):
+            project = "" + item["Project"]
+    return project
 
 def updatingProjectData(namegiven, projects):
     for item in dataList:
