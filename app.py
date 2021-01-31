@@ -4,7 +4,51 @@ import os
 from threading import Thread
 from slack import WebClient
 import json
+import pymongo
 
+client = pymongo.MongoClient("mongodb+srv://amv:mchacks8@cluster0.jweue.mongodb.net/test?retryWrites=true&w=majority")
+db = client.Employee_Data
+collection = db['task_info']
+dataList = collection.find()
+
+def updatingProjectData(namegiven, projects):
+    for item in dataList:
+        if(item["Name"] == namegiven):
+            myquery = { "Name": namegiven}
+            newvalues = { "$set": { "Project": projects}}
+            collection.update_one(myquery, newvalues)
+
+def moveTaskToCompleted(namegiven,task):
+    for item in dataList:
+        for data in item["Tasks"]:
+            if(item["Name"] == namegiven and data == task):
+                #myquerys = { "Tasks": data}
+                collection.update_one(
+                  { "Name": namegiven },
+                  { "$pull": { "Tasks": task } }
+                )
+                collection.update_one(
+                    { "Name": namegiven},
+                    {"$push": {"Completed_Tasks": task} }
+                )
+def addTask(namegiven, task):
+    for item in dataList:
+        if(item["Name"] == namegiven):
+            collection.update_one(
+                { "Name": namegiven},
+                {"$push": {"Tasks": task}}
+                )
+#dataList.sort({"Productivity":-1}).limit(1) // for MAX
+
+def employeeRec(projects):
+    for item in dataList:
+        if(item["Project"] == projects and item["Productivity"] > str(8.5)):
+            print("I recommend you assign the task to this employee: " + item["Name"])
+
+            #collection.update_one(
+            #{ "Project": projects},
+            #{"$push": {"Tasks": task}}
+            #)
 
 # This `app` represents your existing Flask app
 app = Flask(__name__)
@@ -15,7 +59,7 @@ app = Flask(__name__)
 vague=["add", "assign", "give", "a job", "put"]
 tasks = ["task"]
 projects = ["another team", "project"]
-names=["violet", "alex", "michael"]
+names=["Violet", "Alex", "Michael"]
 #if a new user joins the slack, make a trigger that adds them to the list of names and gives them a database entry
 deadlines=["make sure", "is completed by", "change the deadline", "done by", "on my desk"]
 greetings = ["hi", "hello", "hello there", "hey", "greetings", "good morning" ]
@@ -57,6 +101,12 @@ def get_user_permission(message):
     permissioncheck = userdata["user"]["is_owner"]
     return permissioncheck
 
+def get_user_name(message):
+    userid = message["user"]
+    userdata=slack_client.users_info(user = userid)
+    name = userdata["user"]["real_name"]
+    return name
+
 actionName = None
 task = None
 project = None
@@ -82,7 +132,7 @@ def handle_message(event_data):
                 #different dialgue for owner
                 if (userIsOwner == True):
                     for name in names:
-                        if (name in command.lower()):
+                        if (name.lower() in command.lower()):
                             actionName = name
                             if ("task" in command.lower()):
                                 response = (
@@ -134,7 +184,7 @@ def handle_message(event_data):
 
                     if("task:" in command.lower()):
                         task = command
-                        task[6:]
+                        addTask(actionName, task[19:])
                         #send task to database
                         response = (
                         "The task has been assigned to " + actionName +". Can I help with anything else?"
@@ -151,7 +201,7 @@ def handle_message(event_data):
                         known = True 
                     if ("project:" in command.lower()):
                         project = command
-                        project[9:]
+                        updatingProjectData(str(actionName), str(project[24:]))
                         #send project to database
                         response = (
                         actionName +" has been assigned to the project. Can I help with anything else?"
@@ -198,8 +248,10 @@ def handle_message(event_data):
                                 % message["user"]
                             )
                             known = True
+                    #TODO: Send message with formatting 
                     for finisher in finishers:
                         if (finisher in command.lower()):
+                            #moveTaskToCompleted(get_user_name(message), task[19:])
                             response = (
                             "Keep up the good work! Your completion time has been logged for task <@%s>. Onto the next one!"
                                 % message["user"]
