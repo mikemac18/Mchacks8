@@ -30,6 +30,17 @@ dataList = collection.find()
 x = []
 assigned = []
 
+<<<<<<< HEAD
+=======
+for item in dataList:
+    assigned = ""
+    for employee in item["employees"]:
+        assigned = assigned + str(employee["name"]) + ", "
+    #print("Task: " + item["task"] + " Employees: " + assigned + " Due Date: " + str(item["due_date"]))
+    assigned = assigned[:-2]
+    x.append("Task: " + item["task"] + "\n" + " Employees: " + assigned + "\n" + " Due Date: " + str(item["due_date"]) + "\n")
+
+>>>>>>> 579536b7142b32fc2be298c9c6828d55c7e73c84
 for item in dataList:
     assigned = ""
     for employee in item["employees"]:
