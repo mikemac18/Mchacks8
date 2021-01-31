@@ -104,9 +104,10 @@ def handle_message(event_data):
                                 break
                             elif ("status report" in command.lower()):
                                 #send status report from database
+                                print(actionName)
                                 response = (
                                 "Here is the status report: %s  Can I help with anything else?"
-                                    % getStatusReport(get_user_name())
+                                    % getStatusReport(actionName)
                                 )
                                 known = True
                                 break
@@ -168,7 +169,6 @@ def handle_message(event_data):
                         actionName +" has been assigned to the project. Can I help with anything else?"
                             #% message["user"]
                         )
-                        actionName = None
                         known = True
                     elif ("project" in command.lower() and not (actionName is None)):
                         #send project to database
@@ -180,6 +180,20 @@ def handle_message(event_data):
 
                 #if not an owner, treat as employee
                 else:
+                    actionName = get_user_name(message)
+                    if("status report: " in command.lower()):
+                        usersname = get_user_name(message)
+                        print(usersname)
+                        print(command[30:])
+                        statusUpdate(usersname, command[30:])
+                        response = (
+                        "Your progress has been logged. Thanks for a productive day of work, "+usersname+"!"
+                            #% message["user"]
+                        )
+                        known = True
+                        break
+
+
                     if("task:" in command.lower()):
                         #task = command
                         moveTaskToCompleted(get_user_name(message), command[21:])
@@ -213,9 +227,10 @@ def handle_message(event_data):
 
                     for helper in helpers:
                         if (helper in command.lower()):
+                            project1 = getEmployeeProject(get_user_name(message))
                             response = (
-                            "Other task members include: <@%s> . Don't be afraid to ask for help!"
-                                % getEmployeesByProject(getEmployeeProject(get_user_name()))
+                            "Other task members include: %s . Don't be afraid to ask for help!"
+                                % getEmployeesByProject(project1)
                             )
                             known = True
                     for finisher in finishers:
@@ -254,19 +269,28 @@ def handle_message(event_data):
     thread.start()
     return Response(status=200)
 
-def getEmployeesByProject(project):
-    employees = ""
+
+def statusUpdate(namegiven, status):
     for item in dataList:
-        if (item["Project"].lower() in project.lower()):
-            employees = employees + item["Name"] + ", "
-    employees = employees[:-2]
+        if(item["Name"] == namegiven):
+            myquery = { "Name": namegiven}
+            newvalues = { "$set": { "Status": status}}
+            collection.update_one(myquery, newvalues)
+
+def getEmployeesByProject(project):
+    employees =""
+    for item in dataList:
+        print(item["Name"]["Project"])
+        if (item["Name"]["Project"].lower() == project.lower()):
+            employees = employees + item["Name"] #+ ", "
+   # employees = employees[1:-2]
     return employees
 
 def getStatusReport(name):
     report = "No report available"
     for item in dataList:
-        if (item["Name"].lower() in name.lower()):
-            report = "" + item["Status"]
+        if (item["Name"].lower() == name.lower()):
+            report = item["Status"]
     return report
 
 def getAllTasks(name):
@@ -287,13 +311,6 @@ def getCompletedTasks(name):
             completed = completed[:-2]
     return completed
 
-def getStatusReport(name):
-    report = "No report available"
-    for item in datalist:
-        if (item["Name"].lower() in name.lower()):
-            report = "" + item["Status"]
-    return report
-
 def getEmployeeList():
     names = []
     for item in dataList:
@@ -305,7 +322,7 @@ def getEmployeeProject(name):
     name = name.lower()
     for item in dataList:
         if (item["Name"].lower() in name.lower()):
-            project = "" + item["Project"]
+            project = item["Project"]
     return project
 
 def updatingProjectData(namegiven, projects):
