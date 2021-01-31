@@ -184,7 +184,7 @@ def handle_message(event_data):
 
                     if("task:" in command.lower()):
                         task = command
-                        addTask(actionName, task[19:])
+                        addTask(actionName, task[21:])
                         #send task to database
                         response = (
                         "The task has been assigned to " + actionName +". Can I help with anything else?"
