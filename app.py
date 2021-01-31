@@ -104,7 +104,7 @@ def get_user_permission(message):
 def get_user_name(message):
     userid = message["user"]
     userdata=slack_client.users_info(user = userid)
-    name = userdata["user"]["real_name"]
+    name = userdata["user"]["profile"]["display_name"]
     return name
 
 actionName = None
@@ -219,6 +219,15 @@ def handle_message(event_data):
                         
                 #if not an owner, treat as employee
                 else:
+                    if("task:" in command.lower()):
+                        #task = command
+                        moveTaskToCompleted(get_user_name(message), command[21:])
+                        response = (
+                        "Your task has been marked as completed. Congratulations!"
+                            #% message["user"]
+                        )
+                        known = True
+                        break
                     for greeting in greetings:
                         if (greeting in command.lower()):
                             response = (
@@ -247,14 +256,13 @@ def handle_message(event_data):
                             "Other task members include: <@%s> . Don't be afraid to ask for help!"
                                 % message["user"]
                             )
-                            known = True
-                    #TODO: Send message with formatting 
+                            known = True 
                     for finisher in finishers:
                         if (finisher in command.lower()):
                             #moveTaskToCompleted(get_user_name(message), task[19:])
                             response = (
-                            "Keep up the good work! Your completion time has been logged for task <@%s>. Onto the next one!"
-                                % message["user"]
+                            "Keep up the good work! Please enter 'task:' followed by the name of your completed task."
+                               # % message["user"]
                             )
                             known = True
                     for productivity in productivities:
