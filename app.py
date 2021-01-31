@@ -4,12 +4,18 @@ import os
 from threading import Thread
 from slack import WebClient
 import json
+from data import getDataList, getDataList1
+from managerbot import *
 import pymongo
+import time
+from managerbot import ManagerBot
 
 client = pymongo.MongoClient("mongodb+srv://amv:mchacks8@cluster0.jweue.mongodb.net/test?retryWrites=true&w=majority")
 db = client.Employee_Data
 collection = db['task_info']
 dataList = collection.find()
+dataList1 = collection.find()
+
 
 # This `app` represents your existing Flask app
 app = Flask(__name__)
@@ -71,13 +77,15 @@ def get_user_name(message):
 actionName = None
 task = None
 project = None
-
+count = 0
 @slack_events_adapter.on("app_mention")
+
 def handle_message(event_data):
     def send_reply(value):
         global actionName
         global task
         global project
+        count = 0
         event_data = value
         message = event_data["event"]
         if message.get("subtype") is None:
@@ -102,13 +110,14 @@ def handle_message(event_data):
                                 )
                                 known = True
                                 break
-                            elif ("status report" in command.lower()):
+                            elif ("status" in command.lower() or "report" in command.lower()):
                                 #send status report from database
                                 print(actionName)
                                 response = (
                                 "Here is the status report: %s  Can I help with anything else?"
                                     % getStatusReport(actionName)
                                 )
+                                count = count + 1
                                 known = True
                                 break
                             else:
@@ -147,6 +156,7 @@ def handle_message(event_data):
                     if("task:" in command.lower()):
                         task = command
                         addTask(actionName, task[21:])
+                        count = count + 1
                         #send task to database
                         response = (
                         "The task has been assigned to " + actionName +". Can I help with anything else?"
@@ -164,6 +174,7 @@ def handle_message(event_data):
                     if ("project:" in command.lower()):
                         project = command
                         updatingProjectData(str(actionName), str(project[24:]))
+                        count = count + 1
                         #send project to database
                         response = (
                         actionName +" has been assigned to the project. Can I help with anything else?"
@@ -181,6 +192,15 @@ def handle_message(event_data):
                 #if not an owner, treat as employee
                 else:
                     actionName = get_user_name(message)
+<<<<<<< HEAD
+
+                    if("who" in command.lower() or "who is " in command.lower()):
+                        employeeRec()
+                        
+
+
+=======
+>>>>>>> 5ed3fcd57847d2040b930e106fcdb8a1b68815eb
                     if("status report: " in command.lower()):
                         usersname = get_user_name(message)
                         print(usersname)
@@ -190,6 +210,10 @@ def handle_message(event_data):
                         "Your progress has been logged. Thanks for a productive day of work, "+usersname+"!"
                             #% message["user"]
                         )
+<<<<<<< HEAD
+                        count = count + 1
+=======
+>>>>>>> 5ed3fcd57847d2040b930e106fcdb8a1b68815eb
                         known = True
                         break
 
@@ -197,6 +221,7 @@ def handle_message(event_data):
                     if("task:" in command.lower()):
                         #task = command
                         moveTaskToCompleted(get_user_name(message), command[21:])
+                        count = count + 1
                         response = (
                         "Your task has been marked as completed. Congratulations!"
                             #% message["user"]
@@ -228,10 +253,15 @@ def handle_message(event_data):
                     for helper in helpers:
                         if (helper in command.lower()):
                             project1 = getEmployeeProject(get_user_name(message))
+<<<<<<< HEAD
+                            count = count + 1
+=======
+>>>>>>> 5ed3fcd57847d2040b930e106fcdb8a1b68815eb
                             response = (
                             "Other task members include: %s . Don't be afraid to ask for help!"
                                 % getEmployeesByProject(project1)
                             )
+                            
                             known = True
                     for finisher in finishers:
                         if (finisher in command.lower()):
@@ -269,13 +299,41 @@ def handle_message(event_data):
     thread.start()
     return Response(status=200)
 
+<<<<<<< HEAD
+def getStatusReport(namegiven):
+    
+    for item in getDataList()[count]:
+        print(item["Status"])
+        if(item["Name"].lower() == namegiven.lower()):
+            report = item["Status"]
+            return report
+
+def statusUpdate(namegiven, status):
+    for item in getDataList1()[count]:
+=======
 
 def statusUpdate(namegiven, status):
     for item in dataList:
+>>>>>>> 5ed3fcd57847d2040b930e106fcdb8a1b68815eb
         if(item["Name"] == namegiven):
             myquery = { "Name": namegiven}
             newvalues = { "$set": { "Status": status}}
             collection.update_one(myquery, newvalues)
+<<<<<<< HEAD
+            
+
+def getEmployeesByProject(project):
+    employees =""
+    for item in getDataList1()[count]:
+        if (item["Project"].lower() == project.lower()):
+            employees = employees + item["Name"] + ", "
+    employees = employees[:-2]
+    return employees
+
+#def getStatusReport(name):
+ ##  for item in dataList:
+   ###eturn report
+=======
 
 def getEmployeesByProject(project):
     employees =""
@@ -292,10 +350,11 @@ def getStatusReport(name):
         if (item["Name"].lower() == name.lower()):
             report = item["Status"]
     return report
+>>>>>>> 5ed3fcd57847d2040b930e106fcdb8a1b68815eb
 
 def getAllTasks(name):
     tasklist = ""
-    for item in dataList:
+    for item in getDataList1()[count]:
         if (item["Name"].lower() in name.lower()):
             for task in item["Tasks"]:
                 tasklist = tasklist + task + ", "
@@ -304,7 +363,7 @@ def getAllTasks(name):
 
 def getCompletedTasks(name):
     completed = ""
-    for item in dataList:
+    for item in getDataList()[count]:
         if (item["Name"].lower() in name.lower()):
             for complete in item["Completed_Tasks"]:
                 completed = completed + complete + ", "
@@ -320,7 +379,7 @@ def getEmployeeList():
 def getEmployeeProject(name):
     project = "No project assigned"
     name = name.lower()
-    for item in dataList:
+    for item in getDataList()[count]:
         if (item["Name"].lower() in name.lower()):
             project = item["Project"]
     return project
@@ -333,7 +392,7 @@ def updatingProjectData(namegiven, projects):
             collection.update_one(myquery, newvalues)
 
 def moveTaskToCompleted(namegiven,task):
-    for item in dataList:
+    for item in getDataList()[count]:
         for data in item["Tasks"]:
             if(item["Name"] == namegiven and data == task):
                 #myquerys = { "Tasks": data}
@@ -346,7 +405,7 @@ def moveTaskToCompleted(namegiven,task):
                     {"$push": {"Completed_Tasks": task} }
                 )
 def addTask(namegiven, task):
-    for item in dataList:
+    for item in getDataList()[count]:
         if(item["Name"] == namegiven):
             collection.update_one(
                 { "Name": namegiven},
@@ -354,10 +413,19 @@ def addTask(namegiven, task):
                 )
 #dataList.sort({"Productivity":-1}).limit(1) // for MAX
 
-def employeeRec(projects):
-    for item in dataList:
-        if(item["Project"] == projects and item["Productivity"] > str(8.5)):
-            print("I recommend you assign the task to this employee: " + item["Name"])
+#def employeeRec():
+    #for item in dataList:
+     #   if(item["Name"]=="Violet" and item["Productivity"] > str(8.5)):
+      #      Status_Update = {
+       #         "type": "section",
+        #        "text": {
+         #           "type": "mrkdwn",
+          #          "text": (
+           #             "I recommend you assign the task to this employee: " + item["Name"]
+            #        ),
+             #   },
+           # }
+           # slack_client.chat_postMessage(**Status_Update)
 
             #collection.update_one(
             #{ "Project": projects},
@@ -366,4 +434,10 @@ def employeeRec(projects):
 
 # Start the server on port 3000
 if __name__ == "__main__":
-  app.run(port=3000)
+    app.run(port=3000)
+    
+    
+
+    
+    
+    
