@@ -57,7 +57,9 @@ def get_user_permission(message):
     permissioncheck = userdata["user"]["is_owner"]
     return permissioncheck
 
-
+actionName = None
+task = None
+project = None
 
 @slack_events_adapter.on("app_mention")
 def handle_message(event_data):
@@ -92,7 +94,7 @@ def handle_message(event_data):
                             elif ("status report" in command.lower()):
                                 #send status report from database
                                 response = (
-                                actionName +" has been assigned to the project. Can I help with anything else?"
+                                "Here is the status report. Can I help with anything else?"
                                     #% message["user"]
                                 )
                                 known = True
@@ -113,17 +115,18 @@ def handle_message(event_data):
                                         )
                                         known = True
                                         break
+
+                    if (actionName is None):
+                        response = (
+                        "Please specify a user along with this action."
+                            #% message["user"]
+                        )
+                        known = True
+                        break
                     for item in vague:
-                        if(item in command.lower() and actionName is None):
+                        if(item in command.lower()):
                             response = (
-                            "Please specify a user along with this action."
-                                #% message["user"]
-                            )
-                            known = True
-                            break
-                        elif(item in command.lower()):
-                            response = (
-                            "Would you like to assign " + actionName+" another task? A new project? Or get a status report?" 
+                            "Please be more specific with your request. Task? Project? Or status report?"
                                 #% message["user"]
                             )
                             known = True
@@ -138,7 +141,7 @@ def handle_message(event_data):
                             #% message["user"]
                         )
                         known = True
-                    elif("task" in command.lower()):
+                    elif("task" in command.lower() and  not (actionName is None)):
 
                         #send task to database
                         response = (
@@ -154,8 +157,9 @@ def handle_message(event_data):
                         actionName +" has been assigned to the project. Can I help with anything else?"
                             #% message["user"]
                         )
+                        actionName = None
                         known = True
-                    elif ("project" in command.lower()):
+                    elif ("project" in command.lower() and not (actionName is None)):
                         #send project to database
                         response = (
                         "Hello, what project would you like to assign " +actionName+ "? Please include 'project:' before your request."
