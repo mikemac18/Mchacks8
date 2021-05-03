@@ -1,5 +1,7 @@
 # Mchacks8
 
+This project attempts to create a chatbot using the slack API. The goal of the slackbot is a productivity bot, that manages tasks and tries to improve productivity in the office. 
+
 Connecting the bot to slack:
 
 # Mac:
